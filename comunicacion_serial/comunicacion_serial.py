@@ -1,5 +1,7 @@
 import serial
 from serial.tools import list_ports
+import json
+import numpy as np
 
 class comunicacion_serial():
     def __init__(self, vid, pid, baudrate):
@@ -25,3 +27,21 @@ class comunicacion_serial():
         except:
             print("Error al conectar con el sensor")
             return False
+
+    def leer(self):
+        try: 
+            data = self.conexion.readline().decode('utf-8').strip().split(",")
+            data.pop()
+            data = np.array(data, dtype=float).reshape(24, 32)
+            return data
+        except:
+            print("Error al leer y decodificar JSON")
+
+if __name__ == "__main__":
+    print("Iniciando comunicación serial")
+    comunicacion_serial = comunicacion_serial(vid=0x1A86, pid=0x7523, baudrate=115200)
+    if(comunicacion_serial.conectar()):
+        contador = 0
+        while contador < 10:
+            comunicacion_serial.leer()
+            contador += 1
