@@ -1,0 +1,16 @@
+version: '3'
+services:
+  emqx:
+    user: root
+    image: "emqx:latest"
+    ports:
+        - "18083:18083"
+        - "1883:1883"
+        - "4369:4369"
+    volumes:
+        - ./data/emqx/data:/opt/emqx/data
+        - ./data/emqx/log:/opt/emqx/log
+    environment:
+        EMQX_LOADED_PLUGINS: emqx_auth_username emqx_auth_clientid
+        EMQX_ADMIN_USERNAME: admin
+        EMQX_ADMIN_PASSWORD: abcd1234
