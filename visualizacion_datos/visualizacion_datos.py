@@ -4,9 +4,9 @@ from comunicacion_serial.comunicacion_serial import comunicacion_serial
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 from matplotlib.figure import Figure
 
-class Hilo(QThread):
+class ImagenTermica(QThread):
     def __init__(self, grafica):
-        super(Hilo, self).__init__() 
+        super(ImagenTermica, self).__init__() 
         self.grafica = grafica
         self.comunicacion_serial = comunicacion_serial(vid=0x1A86, pid=0x7523, baudrate=115200)
         self.comunicacion_serial.conectar()
