@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QVBoxLayout, QFrame, QHBoxLayout
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QVBoxLayout, QFrame, QHBoxLayout, QWidget, QGridLayout
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
 from visualizacion_datos.visualizacion_datos import Grafica, ImagenTermica
@@ -11,9 +11,10 @@ class MainWindow(QMainWindow):
 
     def init_ui(self):
         self.setWindowTitle("Interfaz grafica")
+        self.setGeometry(200, 200, 1300, 500)
         self.display_widgets()
         contenedor = QFrame()
-        contenedor.setLayout(self.vlyt)
+        contenedor.setLayout(self.glyt_principal)
         self.setCentralWidget(contenedor)
     
     def display_widgets(self):
@@ -22,16 +23,15 @@ class MainWindow(QMainWindow):
         label.setFont(QFont("Arial", 20, QFont.Bold))
         label.resize(800, 50)
         label.setAlignment(Qt.AlignCenter)
-        xlyt = QHBoxLayout()
-        xlyt.addWidget(label)
+
+        self.glyt_principal = QGridLayout(self)
+        self.glyt_principal.addWidget(label, 0, 0, 1, 2)
 
         self.grafica = Grafica()
         self.imagen_termica = ImagenTermica(self.grafica)   
         self.imagen_termica.start()
 
-        self.vlyt = QVBoxLayout()
-        self.vlyt.addLayout(xlyt)
-        self.vlyt.addWidget(self.grafica)
+        self.glyt_principal.addWidget(self.grafica, 1, 0, 1, 2)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
