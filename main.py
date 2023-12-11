@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QVBoxLayout, QFrame, QHBoxLayout, QPushButton
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QVBoxLayout, QFrame, QHBoxLayout, QPushButton, QSpinBox
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
 from visualizacion_datos.visualizacion_datos import Grafica, ImagenTermica
@@ -41,16 +41,31 @@ class MainWindow(QMainWindow):
         self.label_temperatura_minima.setFont(QFont("Arial", 10))
         self.label_temperatura_promedio.setFont(QFont("Arial", 10))
 
+        boton_enviar = QPushButton("Enviar")
+        boton_enviar.setFont(QFont("Arial", 10))
+
         boton_guardar = QPushButton("Guardar")
         boton_guardar.setFont(QFont("Arial", 10))
+
+        self.spbox1 = QSpinBox(self)
+        self.spbox1.setRange(20, 40)
+        self.spbox1.setPrefix("Setpoint: ")
         
         xlyt = QHBoxLayout()
         xlyt.addWidget(self.label_temperatura_maxima)
-        xlyt.addWidget(self.label_temperatura_minima)
-        xlyt.addWidget(self.label_temperatura_promedio)
-        xlyt.addWidget(boton_guardar)
-
+        xlyt.addWidget(self.spbox1)
         self.vlyt.addLayout(xlyt)
+
+        xlyt2 = QHBoxLayout()
+        xlyt2.addWidget(self.label_temperatura_minima)
+        xlyt2.addWidget(boton_enviar)
+        self.vlyt.addLayout(xlyt2)
+
+        xlyt3 = QHBoxLayout()
+        xlyt3.addWidget(self.label_temperatura_promedio)
+        xlyt3.addWidget(boton_guardar)
+        self.vlyt.addLayout(xlyt3)
+    
         self.imagen_termica.actualizar_labels_signal.connect(self.actualizar_labels_temperatura)
     
     def actualizar_labels_temperatura(self, maxima, minima, promedio):
