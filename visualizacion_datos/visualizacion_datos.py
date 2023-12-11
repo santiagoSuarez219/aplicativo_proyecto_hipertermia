@@ -1,11 +1,12 @@
 import time
-from PyQt5.QtCore import QThread
+from PyQt5.QtCore import QThread, pyqtSignal
 from comunicacion_serial.comunicacion_serial import comunicacion_serial
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 from matplotlib.figure import Figure
 import numpy as np
 
 class ImagenTermica(QThread):
+    actualizar_labels_signal = pyqtSignal(float, float, float)
     def __init__(self, grafica):
         super(ImagenTermica, self).__init__() 
         self.grafica = grafica
@@ -23,12 +24,13 @@ class ImagenTermica(QThread):
         self.data_imagen_termica = self.comunicacion_serial.leer()
         if len(self.data_maxima_temperatura) == 50:
             self.data_maxima_temperatura.pop(0)
-        self.data_maxima_temperatura.append(np.max(self.data_imagen_termica))
+        maxima = np.max(self.data_imagen_termica)
+        self.data_maxima_temperatura.append(maxima)
         self.grafica.actualizar_graficas(self.data_imagen_termica, self.data_maxima_temperatura)
-        # self.grafica.g1.clear()
-        # self.grafica.g2.clear()
-        # self.grafica.g1.imshow(self.data, cmap='jet')
-        # self.grafica.draw()
+        
+        minima = np.min(self.data_imagen_termica)
+        promedio = np.mean(self.data_imagen_termica)
+        self.actualizar_labels_signal.emit(maxima, minima, promedio)
 
 class Grafica(FigureCanvasQTAgg):
     def __init__(self):
@@ -41,12 +43,6 @@ class Grafica(FigureCanvasQTAgg):
     def actualizar_graficas(self, data_g1, data_g2):
         self.g1.clear()
         self.g1.imshow(data_g1, cmap='jet')
-
-        # Actualiza la segunda gráfica
         self.g2.clear()
         self.g2.plot(data_g2, '-o')
-        
-        # Dibuja las actualizaciones
         self.draw()
-    
-    

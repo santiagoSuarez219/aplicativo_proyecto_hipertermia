@@ -33,29 +33,30 @@ class MainWindow(QMainWindow):
 
         self.vlyt.addWidget(self.grafica)
 
-        temperatura_maxima = QLabel(self)
-        temperatura_maxima.setText("Temperatura máxima: 35 °C")
-        temperatura_maxima.setFont(QFont("Arial", 10))
+        self.label_temperatura_maxima = QLabel(self)
+        self.label_temperatura_minima = QLabel(self)
+        self.label_temperatura_promedio = QLabel(self)
 
-        temperatura_minima = QLabel(self)
-        temperatura_minima.setText("Temperatura minima: 25 °C")
-        temperatura_minima.setFont(QFont("Arial", 10))
-
-        temperatura_promedio = QLabel(self)
-        temperatura_promedio.setText("Temperatura promedio: 30 °C")
-        temperatura_promedio.setFont(QFont("Arial", 10))
+        self.label_temperatura_maxima.setFont(QFont("Arial", 10))
+        self.label_temperatura_minima.setFont(QFont("Arial", 10))
+        self.label_temperatura_promedio.setFont(QFont("Arial", 10))
 
         boton_guardar = QPushButton("Guardar")
         boton_guardar.setFont(QFont("Arial", 10))
         
         xlyt = QHBoxLayout()
-        xlyt.addWidget(temperatura_maxima)
-        xlyt.addWidget(temperatura_minima)
-        xlyt.addWidget(temperatura_promedio)
+        xlyt.addWidget(self.label_temperatura_maxima)
+        xlyt.addWidget(self.label_temperatura_minima)
+        xlyt.addWidget(self.label_temperatura_promedio)
         xlyt.addWidget(boton_guardar)
 
         self.vlyt.addLayout(xlyt)
-
+        self.imagen_termica.actualizar_labels_signal.connect(self.actualizar_labels_temperatura)
+    
+    def actualizar_labels_temperatura(self, maxima, minima, promedio):
+        self.label_temperatura_maxima.setText(f"Temperatura máxima: {maxima:.2f} °C")
+        self.label_temperatura_minima.setText(f"Temperatura mínima: {minima:.2f} °C")
+        self.label_temperatura_promedio.setText(f"Temperatura promedio: {promedio:.2f} °C")
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
